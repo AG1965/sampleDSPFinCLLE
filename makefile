@@ -8,6 +8,9 @@ QSRC_LIB = /QSYS.LIB/$(SRC_LIB).LIB
 all:	DSPFs PGMs
 	@echo "*** make $@ finished ***"
 
+pre-build:
+	system -i "ADDLIBLE $(OBJ_LIB)"
+
 DSPFs:	$(QOBJ_LIB)/DSPDA1FM.FILE
 	@echo "*** make $@ finished ***"
 
@@ -20,16 +23,16 @@ PGMs:	$(QOBJ_LIB)/DSPDA1.PGM
 #------------------------------------------------------------------------------
 # implicit recipes to create objects
 $(QOBJ_LIB)/%.FILE:	./QDSPSRC/%.DSPF
-	system "CPYFRMSTMF FROMSTMF('./$<') TOMBR('/QSYS.LIB/$(SRC_LIB).LIB/QDSPSRC.FILE/$*.MBR') MBROPT(*REPLACE)"
-	system "CRTDSPF FILE($(OBJ_LIB)/$*) SRCFILE($(SRC_LIB)/QDSPSRC) SRCMBR(*FILE)"
+	system -i "CPYFRMSTMF FROMSTMF('./$<') TOMBR('/QSYS.LIB/$(SRC_LIB).LIB/QDSPSRC.FILE/$*.MBR') MBROPT(*REPLACE)"
+	system -i "CRTDSPF FILE($(OBJ_LIB)/$*) SRCFILE($(SRC_LIB)/QDSPSRC) SRCMBR(*FILE)"
 
 $(QOBJ_LIB)/%.PGM:	./QRPGLESRC/%.RPGLE
-	system "CRTBNDRPG PGM($(OBJ_LIB)/$*) SRCSTMF('./$<') DBGVIEW(*ALL) REPLACE(*YES)"
+	system -i "CRTBNDRPG PGM($(OBJ_LIB)/$*) SRCSTMF('./$<') DBGVIEW(*ALL) REPLACE(*YES)"
 
 $(QOBJ_LIB)/%.PGM:	./QCLLESRC/%.CLLE
-	system "CRTBNDCL PGM($(OBJ_LIB)/$*) SRCSTMF('./$<') DBGVIEW(*ALL) REPLACE(*YES)"
+	system -i "CRTBNDsystem -i PGM($(OBJ_LIB)/$*) SRCSTMF('./$<') DBGVIEW(*ALL) REPLACE(*YES)"
 	
 $(QOBJ_LIB)/%.PGM:	./QRPGLESRC/%.SQLRPGLE
-	system "CRTSQLRPGI OBJ($(OBJ_LIB)/$*) SRCSTMF('./$<') COMMIT(*NONE) OBJTYPE(*PGM) DBGVIEW(*LIST) REPLACE(*YES)"
+	system -i "CRTSQLRPGI OBJ($(OBJ_LIB)/$*) SRCSTMF('./$<') COMMIT(*NONE) OBJTYPE(*PGM) DBGVIEW(*LIST) REPLACE(*YES)"
            
 
