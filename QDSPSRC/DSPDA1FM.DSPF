@@ -1,0 +1,34 @@
+     A                                      DSPSIZ(27 132 *DS4)
+     A                                      CHGINPDFT
+     A                                      PRINT
+     A                                      ALTHELP(CA01)
+     A                                      HELP
+     A                                      INDARA
+     A                                      CF03(03 'END - with save')
+     A                                      CA05(05 'Refresh')
+     A                                      CA12(12 'CANCEL - without save')
+     A                                      CF21(21 'command entry')
+     A*----------------------------------------------------------------
+     A          R RCD01
+     A                                  1  2SYSNAME
+     A                                  1115DATE
+     A                                      EDTCDE(Y)
+     A                                  1124TIME
+     A                                  1 53' Display data area QSS1MRI '
+     A                                      DSPATR(RI)
+     A                                      DSPATR(HI)
+     A                                  5  2'This is the contents of data area -
+     A                                      QSS1MRI in library'
+     A                                      COLOR(BLU)
+     A            R1LIB         10   O  5 55COLOR(BLU)
+     A                                  9  2'Version Release Modification . . .-
+     A                                       . . . . . . . . . . .'
+     A            R1VRM         10   O  9 60DSPATR(HI)
+     A                                 12  2'Language Feature Code  . . . . . .-
+     A                                       . . . . . . . . . . .'
+     A            R1LANG         4   O 12 60DSPATR(HI)
+     A                                 26  2'F3=End   F5=Refresh   F12=Cancel  -
+     A                                                                         -
+     A                                                          F21=enter comma-
+     A                                      nd                       '
+     A                                      COLOR(BLU)

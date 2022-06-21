@@ -1,0 +1,56 @@
+             PGM
+
+             DCL        VAR(&DTAARANAM) TYPE(*CHAR) LEN(10) +
+                          VALUE(QSS1MRI)
+             DCL        VAR(&DTAARALIB) TYPE(*CHAR) LEN(10)
+             DCLF       FILE(DSPDA1FM)
+/*----------------------------------------------------------------------------*/
+/* Global Message Monitoring                                                  */
+             DCL        VAR(&ERRORSW)    TYPE(*LGL )
+             DCL        VAR(&ERRMSGID)   TYPE(*CHAR) LEN(  7)
+             DCL        VAR(&ERRMSGDTA)  TYPE(*CHAR) LEN(512)
+             DCL        VAR(&ERRMSGF)    TYPE(*CHAR) LEN( 10)
+             DCL        VAR(&ERRMSGFLIB) TYPE(*CHAR) LEN( 10)
+             MONMSG     MSGID(CPF0000 MCH0000 MSG0000) EXEC(GOTO CMDLBL(ERROR))
+/*----------------------------------------------------------------------------*/
+
+             RTVOBJD    OBJ(&DTAARANAM) OBJTYPE(*DTAARA) +
+                          RTNLIB(&DTAARALIB)
+
+             CHGVAR     VAR(&R1LIB) VALUE(&DTAARALIB)
+             CHGVAR     VAR(&IN05)  VALUE('1')
+
+             DOWHILE    COND('for' *NE 'ever')
+               IF         COND(&IN05 = '1') THEN(DO)
+                 RTVDTAARA  DTAARA(&DTAARALIB/&DTAARANAM (1 10)) +
+                              RTNVAR(&R1VRM)
+                 RTVDTAARA  DTAARA(&DTAARALIB/&DTAARANAM (26 4)) +
+                              RTNVAR(&R1LANG)
+               ENDDO
+               SNDRCVF    RCDFMT(RCD01)
+               IF         COND(&IN03 = '1') THEN(LEAVE)
+               IF         COND(&IN12 = '1') THEN(LEAVE)
+               IF         COND(&IN21 = '1') THEN(DO)
+                 CALL       PGM(QUSCMDLN)
+               ENDDO
+
+
+             ENDDO
+
+             RETURN
+/*----------------------------------------------------------------------------*/
+ ERROR:
+/* avoid loop in error handling */
+             IF    COND(&ERRORSW) THEN(DO)
+               SNDPGMMSG  MSGID(CPF9999) MSGF(QCPFMSG) MSGTYPE(*ESCAPE)
+             ENDDO
+             CHGVAR VAR(&ERRORSW) VALUE('1')
+
+             RCVMSG     MSGTYPE(*LAST) RMV(*NO) +
+                          MSGDTA(&ERRMSGDTA) MSGID(&ERRMSGID) MSGF(&ERRMSGF) +
+                          SNDMSGFLIB(&ERRMSGFLIB)
+
+             SNDPGMMSG  MSGID(&ERRMSGID) MSGF(&ERRMSGFLIB/&ERRMSGF) +
+                          MSGDTA(&ERRMSGDTA) MSGTYPE(*ESCAPE)
+ PGMENDE:
+/*----------------------------------------------------------------------------*/
