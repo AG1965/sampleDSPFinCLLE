@@ -33,8 +33,11 @@ You can do that in the shell with e.g. `nano makefile` or use any PC editor or u
 You should then be able to create the objects with just typing `make`.
 
 ### use the commands
+use the default values of the command; just make sure that you have the library containing the display file in your library list, so that the CLE-compiler can find it.
 
 `ADDLIBLE <object library>`
+
 `CRTDSPF FILE(<object library>/DSPDA1FM) SRCFILE(<source library>/QDSPSRC) SRCMBR(DSPDA1FM)`      
+
 `CRTBNDCL PGM(<object library>/DSPDA1) SRCFILE(<source library>/QCLLESRC) SRCMBR(DSPDA1)`         
 
